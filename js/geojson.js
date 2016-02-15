@@ -1,38 +1,40 @@
+/**
+ * @author Starr
+ */
 
-
-
-//Map of GeoJSON data from CrimeRates.geojson 
+/* Map of GeoJSON data from MegaCities.geojson */
 
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
     var map = L.map('map', {
     	//set geographic center
-        center: [38, -87],
+        center: [20, 0],
         //set initial zoom level
-        zoom: 4
+        zoom: 2
     });
 
 
 //add OSM base tilelayer
-    L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-	subdomains: 'abcd',
-	maxZoom: 19
-}).addTo(map);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    	//set attribute info (source)
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        //and add it to map
+    }).addTo(map);
 
-getData(map);
-
+    //call getData function- will add our MegaCities data to the map
+    getData(map);
 };
 
 function getData(map){
 	//ajax function to get MegaCities data layer loaded into map
-	$.ajax("data/CrimeRates.geojson", {
+	$.ajax("data/MegaCities.GeoJSON", {
 		//datatype specified
 		dataType: "json",
 		//upon success, call the following function
 		success: function(response){
-			//Let's set options for the geojson markers.  Note the object notation.
+			//Let's set options for the geojson markers.  Note the object notation. 
+			//Put the styling options into a single variable
 			  var geojsonMarkerOptions = {
                 radius: 8,
                 fillColor: "#ff7800",
@@ -57,5 +59,3 @@ function getData(map){
 
 //way at the bottom- we call the create map function once the doc has loaded.
 $(document).ready(createMap);
-
-
