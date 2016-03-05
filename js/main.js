@@ -8,7 +8,8 @@ var rawAttribute;
 var attributes;
 var rawAttributes;
 var index;
-
+var response;
+//var attValue
 //not sure I'll need this..
 var normalized = true
 var raw = false
@@ -409,48 +410,66 @@ function getData(map){
 			rawAttributes = processRawData(response);
             
             //call function to create proportional symbols
-            createPropSymbols(response, map, attributes);
+            //createPropSymbols(response, map, attributes);
             //createRawSymbols
             createSequenceControls(map, attributes);
             createRawSequenceControls(map, rawAttributes);
             console.log("sequence working");
-            createRawPropSymbols(response, map, rawAttributes);
+            
+            //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
+            (function(){
+            $("#Normalized").click(function(){
+            	 normalize = true
+            	if (normalize = true) {
+            	createPropSymbols(response, map, attributes);
+            	}
+            });
+            
+            $("#Raw").click(function(){
+            	normalize = false
+            	raw = true
+            	if (raw = true) {
+            	createPropSymbols(response, map, rawAttributes);
+            	}
+            });
+            })();
+            return response
         }
 		
 	});
 };
 
 //This is my fifth operator- attempting to resymbolize by calling updatePropSymbols based on raw/normalized data.
-	console.log("this is the normal function hear me roar")
+	//console.log("this is the normal function hear me roar")
         //when clicked, call function:
-       $("#Normalized").click(function(){
-       		console.log("this is the normalized function")
-       		console.log(attributes)
+       //$("#Normalized").click(function(){
+       		//console.log("this is the normalized function")
+       		//console.log(attributes)
             //normalize = true
             //if (normalize = true) {
             	//want to turn off Raw symbols when "normalized" button clicked
-            	if (map.hasLayer(updateRawPropSymbols)){
-            		console.log("map has rawPropSymbol layer")
-                	map.removeLayer(updateRawPropSymbols);
-            	} 
+            	// if (map.hasLayer(updateRawPropSymbols)){
+            		// console.log("map has rawPropSymbol layer")
+                	// map.removeLayer(updateRawPropSymbols);
+            	//} 
             	//also want to call the function which wil update proportional symbols based on normalized attributes
-            	updatePropSymbols(map, attribute);
-            	console.log(attributes);
+            	//updatePropSymbols(map, attribute);
+            	//console.log(attributes);
             //}
-         });
+         //});
 // 
- $("#Raw").click(function(){
+ //$("#Raw").click(function(){
        		//normalize = false
        		//if (normalize = false){
-       			console.log("this is the raw function")
-       			if (map.hasLayer(updatePropSymbols)){
-                	map.removeLayer(updatePropSymbols);
-            	} 
+       			//console.log("this is the raw function")
+       			// if (map.hasLayer(layer)){
+                	// map.removeLayer(layer);
+            	//} 
             	//Upon clicking "Raw" button, the same function is called as above, except this time with raw attributes being passed in
-       			updatePropSymbols(map, rawAttribute);
-       			//console.log(rawAttribute)
+       			//updatePropSymbols(map, rawAttribute);
+       			//console.log(rawAttributes)
        		//}
-     });
+     //});
      //end createMinMax
 // 
 //createNormalizedRaw(pointToLayer, )
