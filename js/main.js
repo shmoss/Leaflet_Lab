@@ -66,7 +66,7 @@ function calcRawPropRadius(rawAttValue) {
 //end radius function
 
 //function to convert markers to circle markers
-function pointToLayer(feature, latlng, attributes, rawAttribute){
+function pointToLayer(feature, latlng, attributes){
 	console.log("Hi")
     //Determine which attribute to visualize with proportional symbols
     attribute = attributes[0];
@@ -95,8 +95,8 @@ function pointToLayer(feature, latlng, attributes, rawAttribute){
     var popupContent = "<p><b>City:</b> " + feature.properties.City + "</p>";
     
     //add formatted attribute to popup content string
-    var year = attribute.split("_")[0];
-    popupContent += "<p><b>Crime Rate in " + year + ":</b> " + feature.properties[attribute] + " homicides per 100,000 people</p>" + ":</b> " + feature.properties[rawAttribute] + " homicides total</p>";
+    var year = attribute.split("_")[1];
+    popupContent += "<p><b>Homicide Rate in " + year + ":</b> " + feature.properties[attribute] + " homicides per 100,000 people</p>" + ":</b> "
 	//console.log(rawAttribute)
     //bind the popup to the circle marker
      //Example 2.5 line 1...bind the popup to the circle marker
@@ -120,59 +120,59 @@ function pointToLayer(feature, latlng, attributes, rawAttribute){
     return layer;
 };
 
-function rawPointToLayer(feature, latlng, rawAttributes){
-	console.log("Hi raw data")
-    //Determine which attribute to visualize with proportional symbols
-    rawAttribute = rawAttributes[0];
-    console.log(rawAttribute)
-    console.log("Hi again")
-
-    //create marker options
-    var options = {
-        fillColor: "#ff3900",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-    };
-
-    //For each feature, determine its value for the selected attribute
-    var rawAttValue = Number(feature.properties[rawAttribute]);
-
-    //Give each feature's circle marker a radius based on its attribute value
-    options.radius = calcPropRadius(rawAttValue);
-
-    //create circle marker layer
-    var layer = L.circleMarker(latlng, options);
-
-    //build popup content string
-    var popupContent = "<p><b>City:</b> " + feature.properties.City + "</p>";
-    
-    //add formatted attribute to popup content string
-    var year = rawAttribute.split("_")[0];
-    popupContent += "<p><b>Crime Rate in " + year + ":</b> " + feature.properties[rawAttribute] + " homicides per 100,000 people</p>";
-
-    //bind the popup to the circle marker
-     //Example 2.5 line 1...bind the popup to the circle marker
-    layer.bindPopup(popupContent, {
-        offset: new L.Point(0,-options.radius)
-    });
-    
-    layer.on({
-        mouseover: function(){
-            this.openPopup();
-        },
-        mouseout: function(){
-            this.closePopup();
-        },
-        click: function(){
-            $("#panel").html(popupContent);
-        }
-    });
-
-    //return the circle marker to the L.geoJson pointToLayer option
-    return layer;
-};
+// function rawPointToLayer(feature, latlng, rawAttributes){
+	// console.log("Hi raw data")
+    // //Determine which attribute to visualize with proportional symbols
+    // rawAttribute = rawAttributes[0];
+    // console.log(rawAttribute)
+    // console.log("Hi again")
+// 
+    // //create marker options
+    // var options = {
+        // fillColor: "#ff3900",
+        // color: "#000",
+        // weight: 1,
+        // opacity: 1,
+        // fillOpacity: 0.8
+    // };
+// 
+    // //For each feature, determine its value for the selected attribute
+    // var rawAttValue = Number(feature.properties[rawAttribute]);
+// 
+    // //Give each feature's circle marker a radius based on its attribute value
+    // options.radius = calcPropRadius(rawAttValue);
+// 
+    // //create circle marker layer
+    // var layer = L.circleMarker(latlng, options);
+// 
+    // //build popup content string
+    // var popupContent = "<p><b>City:</b> " + feature.properties.City + "</p>";
+//     
+    // //add formatted attribute to popup content string
+    // var year = rawAttribute.split("_")[0];
+    // popupContent += "<p><b>Crime Rate in " + year + ":</b> " + feature.properties[rawAttribute] + " homicides per 100,000 people</p>";
+// 
+    // //bind the popup to the circle marker
+     // //Example 2.5 line 1...bind the popup to the circle marker
+    // layer.bindPopup(popupContent, {
+        // offset: new L.Point(0,-options.radius)
+    // });
+//     
+    // layer.on({
+        // mouseover: function(){
+            // this.openPopup();
+        // },
+        // mouseout: function(){
+            // this.closePopup();
+        // },
+        // click: function(){
+            // $("#panel").html(popupContent);
+        // }
+    // });
+// 
+    // //return the circle marker to the L.geoJson pointToLayer option
+    // return layer;
+// };
 
 //Add circle markers for point features to the map
 function createPropSymbols(data, map, attributes){
@@ -186,13 +186,13 @@ function createPropSymbols(data, map, attributes){
 };
 
 //Like createPropSymbols- create raw proportional symbols here
-function createRawPropSymbols(data, map, attributes) {
-	    L.geoJson(data, {
-        pointToLayer: function(feature, latlng){
-        	return pointToLayer(feature, latlng, attributes);
-        }
-    }).addTo(map);
-};
+// function createRawPropSymbols(data, map, attributes) {
+	    // L.geoJson(data, {
+        // pointToLayer: function(feature, latlng){
+        	// return pointToLayer(feature, latlng, attributes);
+        // }
+    // }).addTo(map);
+// };
 
 			
 
@@ -212,7 +212,7 @@ function updatePropSymbols(map, attribute){
 
             //add formatted attribute to panel content string
             var year = attribute.split("_")[1];
-            popupContent += "<p><b>Population in " + year + ":</b> " + props[attribute] + " million</p>";
+            popupContent += "<p><b>Homicide rate in " + year + ":</b> " + props[attribute] + " homicides per 100,000 people</p>";
 
             //replace the layer popup
             layer.bindPopup(popupContent, {
@@ -223,31 +223,31 @@ function updatePropSymbols(map, attribute){
 };
 
 //Mirror the updatePropSymbols function with one that takes rawAttributes for basis for proportional symbols.  Again- probably unnecessary[just give the updatePropSymbols a new parameter?]
-function updateRawPropSymbols(map, rawAttribute){
-    map.eachLayer(function(layer){
-      //Example 3.16 line 4
-        if (layer.feature && layer.feature.properties[rawAttribute]){
-            //access feature properties
-            var props = layer.feature.properties;
-
-            //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(props[rawAttribute]);
-            layer.setRadius(radius);
-
-            //add city to popup content string
-            var popupContent = "<p><b>City:</b> " + props.City + "</p>";
-
-            //add formatted attribute to panel content string
-            var year = rawAttribute.split("_")[1];
-            popupContent += "<p><b>Population in " + year + ":</b> " + props[rawAttribute] + " million</p>";
-
-            //replace the layer popup
-            layer.bindPopup(popupContent, {
-                offset: new L.Point(0,-radius)
-            });
-        };
-	});
-};
+// function updateRawPropSymbols(map, rawAttribute){
+    // map.eachLayer(function(layer){
+      // //Example 3.16 line 4
+        // if (layer.feature && layer.feature.properties[rawAttribute]){
+            // //access feature properties
+            // var props = layer.feature.properties;
+// 
+            // //update each feature's radius based on new attribute values
+            // var radius = calcPropRadius(props[rawAttribute]);
+            // layer.setRadius(radius);
+// 
+            // //add city to popup content string
+            // var popupContent = "<p><b>City:</b> " + props.City + "</p>";
+// 
+            // //add formatted attribute to panel content string
+            // var year = rawAttribute.split("_")[1];
+            // popupContent += "<p><b>Population in " + year + ":</b> " + props[rawAttribute] + " million</p>";
+// 
+            // //replace the layer popup
+            // layer.bindPopup(popupContent, {
+                // offset: new L.Point(0,-radius)
+            // });
+        // };
+	// });
+// };
 
 function createSequenceControls(map, attributes){
     //create range input element (slider)
@@ -261,8 +261,8 @@ function createSequenceControls(map, attributes){
     });
     $('#panel').append('<button class="skip" id="reverse">Reverse</button>');
     $('#panel').append('<button class="skip" id="forward">Skip</button>');
-    $('#reverse').html('<img src="img/backward.png">');
-    $('#forward').html('<img src="img/forward.png">');
+    //$('#reverse').html('<img src="img/backward.png">');
+    //$('#forward').html('<img src="img/forward.png">');
     
     $('.skip').click(function(){
         
@@ -298,6 +298,7 @@ function createSequenceControls(map, attributes){
     });
     
 };
+
 		
 //Haven't worked this out yet- [probably not correct way to do this] but added another range slider for the raw data- will want to merge it with existing slider..	
 function createRawSequenceControls(map, rawAttributes){
@@ -337,6 +338,7 @@ function createRawSequenceControls(map, rawAttributes){
         updateRawPropSymbols(map, rawAttributes[index]);
         
     });
+   
 
     //Step 5: input listener for slider
     $('.range-slider').on('input', function(){
@@ -349,6 +351,7 @@ function createRawSequenceControls(map, rawAttributes){
     });
     
 };
+
 //This function wil put the normalized data into an array
 function processData(data){
     //empty array to hold attributes
@@ -410,10 +413,10 @@ function getData(map){
 			rawAttributes = processRawData(response);
             
             //call function to create proportional symbols
-            //createPropSymbols(response, map, attributes);
+            createPropSymbols(response, map, attributes);
             //createRawSymbols
             createSequenceControls(map, attributes);
-            createRawSequenceControls(map, rawAttributes);
+            //createRawSequenceControls(map, rawAttributes);
             console.log("sequence working");
             
             //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
