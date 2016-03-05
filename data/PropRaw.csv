@@ -1,0 +1,16 @@
+id,City,Prop_2007,Prop_2008,Prop_2009,Prop_2010,Prop_2011,Prop_2012,Prop_2013,Raw_2007,Raw_2008,Raw_2009,Raw_2010,Raw_2011,Raw_2012,Raw_2013,latitude,longitude,name,desc,color,source,precision
+1,Chicago,15.6,18,16.1,15.2,15.9,18.5,15.2,443,510,459,432,431,500,414,41.8842506,-87.6324463,Chicago,"Chicago, IL",,Bing Maps,city/town
+2,Indianapolis,14.3,14.1,12.3,11.5,11.5,11.6,15.2,114,114,100,100,96,97,129,39.7669106,-86.1499634,Indianapolis,"Indianapolis, IN",,Bing Maps,city/town
+3,Columbus,10.7,14.5,10.9,12.2,11,11.2,11.1,79,109,83,94,87,89,90,39.9619904,-83.0027466,Columbus,"Columbus, OH",,Bing Maps,city/town
+4,Detroit,45.8,33.8,40.2,34.5,48.2,54.6,45.2,394,306,365,310,344,386,316,42.3316803,-83.0479965,Detroit,"Detroit, MI",,Bing Maps,city/town
+5,Milwaukee,18.3,11.8,11.9,15.5,14.2,15.2,17.3,105,71,72,94,85,91,104,43.0418091,-87.9068375,Milwaukee,"Milwaukee, WI",,Bing Maps,city/town
+6,Kansas City,25,25.5,20.6,21.1,23.4,22.6,21.3,112,115,100,102,108,105,99,39.102951,-94.5830765,Kansas City,"Kansas City, MO",,Bing Maps,city/town
+7,Omaha,9.7,10.1,6.8,7.3,10.4,9.8,9.9,42,44,30,34,43,41,42,41.2606888,-95.9405899,Omaha,"Omaha, NE",,Bing Maps,city/town
+8,Cleveland,20.5,23.5,20,19,18.6,21.3,14.1,90,102,86,81,74,84,55,41.5047493,-81.6907196,Cleveland,"Cleveland, OH",,Bing Maps,city/town
+9,Minneapolis,12.7,9.8,4.7,9.6,8.3,10,9.1,47,37,18,37,32,39,36,44.9790306,-93.2649307,Minneapolis,"Minneapolis, MN",,Bing Maps,city/town
+10,Wichita,11.4,8.3,6.8,4.2,6.5,6,3.9,41,30,25,16,25,23,15,37.6869812,-97.3355789,Wichita,"Wichita, KS",,Bing Maps,city/town
+11,St. Louis,39.6,46.9,40.3,40.5,35.3,35.5,37.7,138,167,143,144,113,113,120,38.6277504,-90.1995621,St. Louis,"St Louis, MO",,Bing Maps,city/town
+12,Cincinnati,19,21.9,16.5,20.5,20.5,15.5,23.6,63,73,55,68,61,46,70,39.1071281,-84.5041275,Cincinnati,"Cincinnati, OH",,Bing Maps,city/town
+13,St. Paul,5.2,6.5,4.6,5.7,2.8,4.5,4.8,14,18,13,16,8,13,14,44.943821,-93.0933228,St. Paul,"St Paul, MN",,Bing Maps,city/town
+14,Toledo,4.4,5.7,11.3,7.3,10.4,13.6,9.9,13,18,33,23,30,39,28,41.6538086,-83.5362625,Toledo,"Toledo, OH",,Bing Maps,city/town
+15,Lincoln,2.5,1.6,1.6,0.8,1.5,1.1,1.9,6,4,4,2,4,3,5,40.8136215,-96.7077408,Lincoln,"Lincoln, NE",,Bing Maps,city/town

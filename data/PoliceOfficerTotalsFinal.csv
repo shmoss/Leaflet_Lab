@@ -1,0 +1,16 @@
+id,City,Off_2007,Off_2008,Off_2009,Off_2010,Off_2011,Off_2012,Off_2013,latitude,longitude,name,desc,color,source,precision
+1,Chicago,4.84,4.72,4.59,4.42,4.47,4.41,4.45,41.8842506,-87.6324463,Chicago,"Chicago, IL",,Bing Maps,city/town
+2,Indianapolis,2.01,1.97,1.99,2,1.94,1.9,1.81,39.7669106,-86.1499634,Indianapolis,"Indianapolis, IN",,Bing Maps,city/town
+3,Columbus,2.47,2.43,2.47,2.35,2.29,2.29,2.28,39.9619904,-83.0027466,Columbus,"Columbus, OH",,Bing Maps,city/town
+4,Detroit,3.53,3.35,3.23,3.21,3.87,3.63,3.37,42.3316803,-83.0479965,Detroit,"Detroit, MI",,Bing Maps,city/town
+5,Milwaukee,3.38,3.35,3.18,3.2,3.12,3.18,3.1,43.0418091,-87.9068375,Milwaukee,"Milwaukee, WI",,Bing Maps,city/town
+6,Kansas City,3.15,2.93,2.87,2.91,3.01,2.74,2.94,39.102951,-94.5830765,Kansas City,"Kansas City, MO",,Bing Maps,city/town
+7,Omaha,1.75,1.71,1.74,1.7,1.89,1.9,1.8,41.2606888,-95.9405899,Omaha,"Omaha, NE",,Bing Maps,city/town
+8,Cleveland,3.76,3.72,3.83,3.66,3.65,3.76,3.79,41.5047493,-81.6907196,Cleveland,"Cleveland, OH",,Bing Maps,city/town
+9,Minneapolis,2.28,2.36,2.32,2.28,2.21,2.18,2.13,44.9790306,-93.2649307,Minneapolis,"Minneapolis, MN",,Bing Maps,city/town
+10,Wichita,1.8,1.73,1.75,1.67,1.68,1.66,1.65,37.6869812,-97.3355789,Wichita,"Wichita, KS",,Bing Maps,city/town
+11,St. Louis,3.88,3.94,3.96,3.84,4.25,4.15,4.04,38.6277504,-90.1995621,St. Louis,"St Louis, MO",,Bing Maps,city/town
+12,Cincinnati,3.33,3.26,3.34,3.28,3.49,3.35,3.24,39.1071281,-84.5041275,Cincinnati,"Cincinnati, OH",,Bing Maps,city/town
+13,St. Paul,2.22,2.17,2.19,2.11,2.07,2.05,1.99,44.943821,-93.0933228,St. Paul,"St Paul, MN",,Bing Maps,city/town
+14,Toledo,2.26,2.01,2.08,1.79,1.44,1.99,1.88,41.6538086,-83.5362625,Toledo,"Toledo, OH",,Bing Maps,city/town
+15,Lincoln,1.27,1.25,1.25,1.25,1.25,1.21,1.2,40.8136215,-96.7077408,Lincoln,"Lincoln, NE",,Bing Maps,city/town

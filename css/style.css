@@ -1,11 +1,29 @@
-#map { height: 600px; }
+#map {height: 600px;
+	  width: 90%;
+	 }
 .leaflet-popup-content p {
     margin: 0.2em 0;
 }
 
 #panel {
-    width: 16%;
+    width: 10%;
     padding: 20px;
     display: inline-block;
     vertical-align: top;
+}
+
+.range-slider {
+    width: 50%;
+}
+
+#forward {
+    float: right;
+    width: 1%;
+    height: 1px;
+}
+
+#reverse {
+    float: left;
+    width: 1%;
+    height: 1px;
 }

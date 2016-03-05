@@ -14,9 +14,9 @@
 		<item value="org.radrails.rails:3.6.1.1408558425-7n-7Z7oRIvAHSB7Z"/>
 	</list>
 	<section name="SaveAsDialogSettings">
-		<item value="760" key="DIALOG_WIDTH"/>
+		<item value="761" key="DIALOG_WIDTH"/>
 		<item value="22" key="DIALOG_Y_ORIGIN"/>
-		<item value="220" key="DIALOG_X_ORIGIN"/>
+		<item value="236" key="DIALOG_X_ORIGIN"/>
 		<item value="529" key="DIALOG_HEIGHT"/>
 		<item value="1|.Helvetica Neue DeskInterface|11.0|0|COCOA|1|.HelveticaNeueDeskInterface-Regular" key="DIALOG_FONT_NAME"/>
 	</section>
