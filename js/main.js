@@ -65,11 +65,26 @@ function calcRawPropRadius(rawAttValue) {
 
 //end radius function
 
+function createPopup(properties, attribute, layer, radius){
+    //add city to popup content string
+    var popupContent = "<p><b>City:</b> " + properties.City + "</p>";
+	console.log(rawAttribute)
+    //add formatted attribute to panel content string
+    var year = attribute.split("_")[1];
+    popupContent += "<p><b>Homicide rate in " + year + ":</b> " + properties[attribute] + " homicides per 100,000 people</p>" + "<p><b>Total homicides in " + year + ":</b> " + properties[rawAttribute];
+
+    //replace the layer popup
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0,-radius)
+    });
+};
+
 //function to convert markers to circle markers
 function pointToLayer(feature, latlng, attributes){
 	console.log("Hi")
     //Determine which attribute to visualize with proportional symbols
     attribute = attributes[0];
+    rawAttribute=rawAttributes[0];
     console.log(attribute)
     console.log("Hi again")
 
@@ -84,6 +99,7 @@ function pointToLayer(feature, latlng, attributes){
 
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
+    
 
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(attValue);
@@ -92,17 +108,7 @@ function pointToLayer(feature, latlng, attributes){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content string
-    var popupContent = "<p><b>City:</b> " + feature.properties.City + "</p>";
-    
-    //add formatted attribute to popup content string
-    var year = attribute.split("_")[1];
-    popupContent += "<p><b>Homicide Rate in " + year + ":</b> " + feature.properties[attribute] + " homicides per 100,000 people</p>" + ":</b> "
-	//console.log(rawAttribute)
-    //bind the popup to the circle marker
-     //Example 2.5 line 1...bind the popup to the circle marker
-    layer.bindPopup(popupContent, {
-        offset: new L.Point(0,-options.radius)
-    });
+    createPopup(feature.properties, attribute, layer, options.radius);
     
     layer.on({
         mouseover: function(){
@@ -208,18 +214,11 @@ function updatePropSymbols(map, attribute){
             layer.setRadius(radius);
 
             //add city to popup content string
-            var popupContent = "<p><b>City:</b> " + props.City + "</p>";
-
-            //add formatted attribute to panel content string
-            var year = attribute.split("_")[1];
-            popupContent += "<p><b>Homicide rate in " + year + ":</b> " + props[attribute] + " homicides per 100,000 people</p>";
-
-            //replace the layer popup
-            layer.bindPopup(popupContent, {
-                offset: new L.Point(0,-radius)
-            });
+          createPopup(props, attribute, layer, radius, rawAttribute);
+          
         };
 	});
+	updateLegend(map, attribute);
 };
 
 //Mirror the updatePropSymbols function with one that takes rawAttributes for basis for proportional symbols.  Again- probably unnecessary[just give the updatePropSymbols a new parameter?]
@@ -299,7 +298,67 @@ function createSequenceControls(map, attributes){
     
 };
 
-		
+//Create new sequence controls
+
+// function createSequenceControls(map, attributes){  
+	// console.log(attributes) 
+    // var SequenceControl = L.Control.extend({
+        // options: {
+            // position: 'bottomleft'
+        // },
+// 
+       // onAdd: function(map){
+            // // create the control container with a particular class name
+            // var container = L.DomUtil.create('div', 'sequence-control-container');
+// 
+            // //create range input element (slider)
+            // $(container).append('<input class="range-slider" type="range">');
+// 
+//       
+	        // //add skip buttons
+            // $(container).append('<button class="skip" id="reverse" title="Reverse">Reverse</button>');
+            // $(container).append('<button class="skip" id="forward" title="Forward">Skip</button>');
+// 	
+			// //kill any mouse event listeners on the map
+            // $(container).on('mousedown dblclick', function(e){
+                // L.DomEvent.stopPropagation(e);
+            // });
+// 
+// 			
+            // return container;
+        // }
+    // });
+// 
+ // map.addControl(new SequenceControl());
+// 
+ // $('.range-slider').attr({
+   // max: 6,
+   // min: 0,
+   // value: 0,
+   // step: 1
+ // });
+// 		
+// $('.skip').click(function(){
+    // var index = $('.range-slider').val();
+    // if($(this).attr('id')=='forward'){
+      // index++;
+      // index = index > 6 ? 0 : index;
+    // } else if ($(this).attr('id') == 'reverse'){
+      // index--;
+      // index = index < 0 ? 6 : index;
+    // };
+// 
+  // $('.range-slider').val(index);
+ // updatePropSymbols(map, attributes[index]);
+  // console.log(attributes[index]);
+// });
+// 
+  // $('.range-slider').on('input', function(){
+    // var index = $(this).val();
+  // updatePropSymbols(map, attributes[index]);
+  // });
+// };
+    		
 //Haven't worked this out yet- [probably not correct way to do this] but added another range slider for the raw data- will want to merge it with existing slider..	
 function createRawSequenceControls(map, rawAttributes){
     //create range input element (slider)
@@ -390,6 +449,8 @@ function processRawData(data){
         if (rawAttribute.indexOf("Raw") > -1){
             rawAttributes.push(rawAttribute);
             console.log(rawAttributes)
+            console.log(rawAttribute)
+            //return rawAttribute
         };
     };
 
@@ -398,6 +459,7 @@ function processRawData(data){
     console.log(rawAttributes);
 
     return rawAttributes;
+    
 };
 	
 //Step 2: Import GeoJSON data
@@ -413,11 +475,12 @@ function getData(map){
 			rawAttributes = processRawData(response);
             
             //call function to create proportional symbols
-            createPropSymbols(response, map, attributes);
+            //createPropSymbols(response, map, attributes);
             //createRawSymbols
             createSequenceControls(map, attributes);
             //createRawSequenceControls(map, rawAttributes);
             console.log("sequence working");
+            createLegend(map, attributes);
             
             //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
             (function(){
@@ -441,6 +504,115 @@ function getData(map){
 		
 	});
 };
+
+function getCircleValues(map, attribute){
+    //start with min at highest possible and max at lowest possible number
+    var min = Infinity,
+        max = -Infinity;
+
+    map.eachLayer(function(layer){
+        //get the attribute value
+        if (layer.feature){
+            var attributeValue = Number(layer.feature.properties[attribute]);
+
+            //test for min
+            if (attributeValue < min){
+                min = attributeValue;
+            };
+
+            //test for max
+            if (attributeValue > max){
+                max = attributeValue;
+            };
+        };
+    });
+
+    //set mean
+    var mean = (max + min) / 2;
+
+    //return values as an object
+    return {
+        max: max,
+        mean: mean,
+        min: min
+    };
+};
+
+//Example 2.7 line 1...function to create the legend
+function createLegend(map, attributes){
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
+
+        onAdd: function (map) {
+            // create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'legend-control-container');
+
+            //add temporal legend div to container
+            $(container).append('<div id="temporal-legend">')
+
+            //Step 1: start attribute legend svg string
+            var svg = '<svg id="attribute-legend" width="250px" height="200px">';
+            
+            //array of circle names to base loop on
+        	var circles = {
+				max: 42.2,
+				mean: 16.18,
+				min: 2.7
+			};
+
+        	//Step 2: loop to add each circle and text to svg string
+        	for (var i=0; i<circles.length; i++){
+            //circle string
+            svg += '<circle class="legend-circle" id="' + circles[i] + 
+            '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="90"/>';
+            
+             //text string
+            svg += '<text id="' + circles[i] + '-text" x="65" y="60"></text>';
+        	};
+
+        	//close svg string
+        	svg += "</svg>";
+
+
+            //add attribute legend svg to container
+            $(container).append(svg);
+
+            return container;
+        }
+    });
+
+    map.addControl(new LegendControl());
+
+    updateLegend(map, attributes[0]);
+};
+
+//Update the legend with new attribute
+function updateLegend(map, attribute){
+    //create content for legend
+    var year = attribute.split("_")[1];
+    var content = "Homicides in " + year;
+
+    //replace legend content
+    $('#temporal-legend').html(content);
+    
+    //get the max, mean, and min values as an object
+    var circleValues = getCircleValues(map, attribute);
+    
+    for (var key in circleValues){
+        //get the radius
+    	var radius = calcPropRadius(circleValues[key]);
+
+        //Step 3: assign the cy and r attributes
+        $('#'+key).attr({
+            cy: 179 - radius,
+            r: radius
+        });
+    };
+};
+
+
 
 //This is my fifth operator- attempting to resymbolize by calling updatePropSymbols based on raw/normalized data.
 	//console.log("this is the normal function hear me roar")
