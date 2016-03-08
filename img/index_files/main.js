@@ -11,9 +11,8 @@ var index;
 var response;
 //var attValue
 //not sure I'll need this..
-var normalized = true;
-console.log(normalized)
-var raw;
+var normalized = true
+var raw = false
 var IndexCounter = 0; //tracks attribute being mapped
 
 function createMap(){
@@ -22,7 +21,7 @@ function createMap(){
     	//set geographic center
         center: [40, -90],
         //set initial zoom level
-        zoom: 7,
+        zoom: 5,
     });
 
 
@@ -69,7 +68,7 @@ function calcRawPropRadius(rawAttValue) {
 function createPopup(properties, attribute, layer, radius){
     //add city to popup content string
     var popupContent = "<p><b>City:</b> " + properties.City + "</p>";
-	
+	console.log(rawAttribute)
     //add formatted attribute to panel content string
     var year = attribute.split("_")[1];
     popupContent += "<p><b>Homicide rate in " + year + ":</b> " + properties[attribute] + " homicides per 100,000 people</p>" + "<p><b>Total homicides in " + year + ":</b> " + properties[rawAttribute];
@@ -82,11 +81,12 @@ function createPopup(properties, attribute, layer, radius){
 
 //function to convert markers to circle markers
 function pointToLayer(feature, latlng, attributes){
-	//console.log("Hi")
+	console.log("Hi")
     //Determine which attribute to visualize with proportional symbols
     attribute = attributes[0];
     rawAttribute=rawAttributes[0];
-    
+    console.log(attribute)
+    console.log("Hi again")
 
     //create marker options
     var options = {
@@ -181,8 +181,8 @@ function pointToLayer(feature, latlng, attributes){
 // };
 
 //Add circle markers for point features to the map
-function createPropSymbols(data, map, attributes){
-	//console.log(attributes);
+function createPropSymbols(data, map, rawAttributes){
+	console.log(attributes);
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
         pointToLayer: function(feature, latlng){
@@ -202,19 +202,19 @@ function createPropSymbols(data, map, attributes){
 
 			
 
-function updatePropSymbols(map, attribute, rawAttribute){
-	//console.log("THIS IS" + IndexCounter)
+function updatePropSymbols(map, attribute){
+	console.log("THIS IS" + IndexCounter)
     map.eachLayer(function(layer){
       //Example 3.16 line 4
         if (layer.feature && layer.feature.properties[attribute]){
             //access feature properties
             var props = layer.feature.properties;
-			//console.log("THIS IS" + IndexCounter)
+			console.log("this is!" + IndexCounter)
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
 			if(IndexCounter > 0) {
-				//console.log("COUNTTER");
+				console.log("COUNTTER");
 			}
             //add city to popup content string
           createPopup(props, attribute, layer, radius, rawAttribute);
@@ -251,7 +251,7 @@ function updatePropSymbols(map, attribute, rawAttribute){
 	// });
 // };
 
-function createSequenceControls(map, attributes, rawAttributes){
+function createSequenceControls(map, attributes){
     //create range input element (slider)
     $('#panel').append('<input class="range-slider" type="range">');
     console.log("working")
@@ -270,6 +270,7 @@ function createSequenceControls(map, attributes, rawAttributes){
     //$('#forward').html('<img src="img/forward.png">');
     
     $('.skip').click(function(){
+        
         var index = $('.range-slider').val();
         
         //Step 6: increment or decrement depending on button clicked
@@ -286,19 +287,8 @@ function createSequenceControls(map, attributes, rawAttributes){
         //Step 8: update slider
         $('.range-slider').val(index);
         
-        
-        //console.log("About to change in sequence: Normalized is " + normalized)
          //Step 9: pass new attribute to update symbols
-         //console.log("Normalized is: ")
-         if (normalized) {
-        	updatePropSymbols(map, attributes[index]);
-        	console.log("true")
-        } else {
-        	updatePropSymbols(map, rawAttributes[index])
-        	console.log("Changing to raw attributes")
-        	console.log("flase")
-        }
-        	
+        updatePropSymbols(map, attributes[index]);
         
     });
 
@@ -308,14 +298,7 @@ function createSequenceControls(map, attributes, rawAttributes){
         var index = $(this).val();
         
          //Step 9: pass new attribute to update symbols
-        if (normalized) {
-        	updatePropSymbols(map, attributes[index]);
-        	console.log("true")
-        } else {
-        	updatePropSymbols(map, rawAttributes[index])
-        	console.log("Changing to raw attributes")
-        	console.log("flase")
-        }
+        updatePropSymbols(map, attributes[index]);
         
     });
     
@@ -330,12 +313,12 @@ function createSequenceControls(map, attributes, rawAttributes){
 		
 		
 		//update the proportional symbols at year 2008 with the correct attribute
-		updatePropSymbols(dataArray[IndexCounter][0], dataArray[0][0]);
+		updatePropSymbols(map, dataArray[IndexCounter][0], dataArray[0][0]);
 		return IndexCounter;
 	});
   
 };
-//console.log("this is the" + IndexCounter)
+console.log("this is the" + IndexCounter)
 //Create new sequence controls
 
 // function createSequenceControls(map, attributes){  
@@ -397,57 +380,57 @@ function createSequenceControls(map, attributes, rawAttributes){
   // });
 // };
     		
-// //Haven't worked this out yet- [probably not correct way to do this] but added another range slider for the raw data- will want to merge it with existing slider..	
-// function createRawSequenceControls(map, rawAttributes){
-    // //create range input element (slider)
-    // $('#panel').append('<input class="range-slider" type="range">');
-    // console.log("working")
-    // $('.range-slider').attr({
-        // max: 6,
-        // min: 0,
-        // value: 0,
-        // step: 1
-    // });
-    // $('#panel').append('<button class="skip" id="reverse">Reverse</button>');
-    // $('#panel').append('<button class="skip" id="forward">Skip</button>');
-    // $('#reverse').html('<img src="img/backward.png">');
-    // $('#forward').html('<img src="img/forward.png">');
-//     
-    // $('.skip').click(function(){
-//         
-        // var index = $('.range-slider').val();
-//         
-        // //Step 6: increment or decrement depending on button clicked
-        // if ($(this).attr('id') == 'forward'){
-            // index++;
-            // //Step 7: if past the last attribute, wrap around to first attribute
-            // index = index > 6 ? 0 : index;
-        // } else if ($(this).attr('id') == 'reverse'){
-            // index--;
-            // //Step 7: if past the first attribute, wrap around to last attribute
-            // index = index < 0 ? 6 : index;
-        // };
-// 
-        // //Step 8: update slider
-        // $('.range-slider').val(index);
-//         
-         // //Step 9: pass new attribute to update symbols
-        // updateRawPropSymbols(map, rawAttributes[index]);
-//         
-    // });
-//    
-// 
-    // //Step 5: input listener for slider
-    // $('.range-slider').on('input', function(){
-        // //Step 6: get the new index value
-        // var index = $(this).val();
-//         
-         // //Step 9: pass new attribute to update symbols
-        // updateRawPropSymbols(map, rawAttributes[index]);
-//         
-    // });
-//        
-// };
+//Haven't worked this out yet- [probably not correct way to do this] but added another range slider for the raw data- will want to merge it with existing slider..	
+function createRawSequenceControls(map, rawAttributes){
+    //create range input element (slider)
+    $('#panel').append('<input class="range-slider" type="range">');
+    console.log("working")
+    $('.range-slider').attr({
+        max: 6,
+        min: 0,
+        value: 0,
+        step: 1
+    });
+    $('#panel').append('<button class="skip" id="reverse">Reverse</button>');
+    $('#panel').append('<button class="skip" id="forward">Skip</button>');
+    $('#reverse').html('<img src="img/backward.png">');
+    $('#forward').html('<img src="img/forward.png">');
+    
+    $('.skip').click(function(){
+        
+        var index = $('.range-slider').val();
+        
+        //Step 6: increment or decrement depending on button clicked
+        if ($(this).attr('id') == 'forward'){
+            index++;
+            //Step 7: if past the last attribute, wrap around to first attribute
+            index = index > 6 ? 0 : index;
+        } else if ($(this).attr('id') == 'reverse'){
+            index--;
+            //Step 7: if past the first attribute, wrap around to last attribute
+            index = index < 0 ? 6 : index;
+        };
+
+        //Step 8: update slider
+        $('.range-slider').val(index);
+        
+         //Step 9: pass new attribute to update symbols
+        updateRawPropSymbols(map, rawAttributes[index]);
+        
+    });
+   
+
+    //Step 5: input listener for slider
+    $('.range-slider').on('input', function(){
+        //Step 6: get the new index value
+        var index = $(this).val();
+        
+         //Step 9: pass new attribute to update symbols
+        updateRawPropSymbols(map, rawAttributes[index]);
+        
+    });
+       
+};
 
 //This function wil put the normalized data into an array
 function processData(data){
@@ -466,18 +449,18 @@ function processData(data){
     };
 
     //check result
-    //console.log("these are the attributes")
-    //console.log(attributes);
+    console.log("these are the attributes")
+    console.log(attributes);
 
     return attributes;
 };
 
 //This function will put the raw data into an array (same process as normalized data above)
 function processRawData(data){
-	//console.log("Raw data")
+	console.log("Raw data")
     //empty array to hold attributes
-    rawAttributes = [];
-	//console.log(rawAttributes)
+    var rawAttributes = [];
+	console.log(rawAttributes)
     //properties of the first feature in the dataset
     var properties = data.features[0].properties;
 
@@ -486,15 +469,15 @@ function processRawData(data){
         //only take attributes with population values
         if (rawAttribute.indexOf("Raw") > -1){
             rawAttributes.push(rawAttribute);
-            //console.log(rawAttributes)
-            //console.log(rawAttribute)
+            console.log(rawAttributes)
+            console.log(rawAttribute)
             //return rawAttribute
         };
     };
 
     //check result
-    //console.log("these are the attributes")
-    //console.log(rawAttributes);
+    console.log("these are the attributes")
+    console.log(rawAttributes);
 
     return rawAttributes;
     
@@ -513,167 +496,143 @@ function getData(map){
 			rawAttributes = processRawData(response);
             
             //call function to create proportional symbols
-            createPropSymbols(response, map, attributes);
-            
-            //createRawSequenceControls(map, rawAttributes);
-            //console.log("sequence working");
-            createLegend(map, attributes);
-            normalized = true;
-            raw = false;
-            selectValues(response, map, attributes, rawAttributes);
+            //createPropSymbols(response, map, attributes);
             //createRawSymbols
-            createSequenceControls(map, attributes, rawAttributes);
+            createSequenceControls(map, attributes);
+            //createRawSequenceControls(map, rawAttributes);
+            console.log("sequence working");
+            createLegend(map, attributes);
+            
+            //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
+            (function(){
+            $("#Normalized").click(function(){
+            	 normalize = true
+            	if (normalize = true) {
+            	createPropSymbols(response, map, attributes);
+            	
+            	}
+            });
+            
+            $("#Raw").click(function(){
+            	normalize = false
+            	raw = true
+            	if (raw = true) {
+            	createPropSymbols(response, map, rawAttributes);
+            	}
+            });
+            })();
             return response
         }
 		
 	});
 };
 
-function selectValues(response, map, attributes, rawAttributes) {
-	 //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
-    $("#Normalized").click(function(){
-    	 normalized = true
-    	 raw = false
-    	 //console.log(normalized)
-    	if (normalized == true) {
-    		//removeAll()
-    	createPropSymbols(response, map, attributes);
-    	// function removeLayers(map, attribute){
-    		// map.eachLayer(function(layer){
-    			// map.removeLayer(layer)
-//     	
-    	// alert(normalized)
-    // });
-    // };
-    };
+function getCircleValues(map, attribute){
+    //start with min at highest possible and max at lowest possible number
+    var min = Infinity,
+        max = -Infinity;
+
+    map.eachLayer(function(layer){
+        //get the attribute value
+        if (layer.feature){
+            var attributeValue = Number(layer.feature.properties[attribute]);
+
+            //test for min
+            if (attributeValue < min){
+                min = attributeValue;
+            };
+
+            //test for max
+            if (attributeValue > max){
+                max = attributeValue;
+            };
+        };
     });
-    $("#Raw").click(function(){
-    	normalized = false
-    	raw = true
-    	//console.log(normalized)
-    	if (raw == true) {
-    	createPropSymbols(response, map, rawAttributes);
-   
-  		map.removeLayer(attributes);
-    };
-});
- 
-    };
 
+    //set mean
+    var mean = (max + min) / 2;
 
+    //return values as an object
+    return {
+        max: max,
+        mean: mean,
+        min: min
+    };
+};
 
 //Example 2.7 line 1...function to create the legend
 function createLegend(map, attributes){
-	var legendControl = L.Control.extend({
-		options: {
-			position: 'bottomright'
-		},
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
 
-		onAdd: function(map){
-			//create the control container with a particular class name
-			var container = L.DomUtil.create('div', 'legend-control-container');
+        onAdd: function (map) {
+            // create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'legend-control-container');
 
-			//script to create temporal legend
-			$(container).append('<div id = "temporal-legend">');
+            //add temporal legend div to container
+            $(container).append('<div id="temporal-legend">')
 
-			//start attribute legend svg string
-			var svg = '<svg id = "attribute-legend" width = "150px" height = "90px">';
-
-			//create an array of circle names for loop
-			var circles = {
-				max: 20,
-				mean: 40,
-				min: 60
+            //Step 1: start attribute legend svg string
+            var svg = '<svg id="attribute-legend" width="250px" height="200px">';
+            
+            //array of circle names to base loop on
+        	var circles = {
+				max: 42.2,
+				mean: 16.18,
+				min: 2.7
 			};
 
-			//loop to add each circle and text to svg string
-			for (var circle in circles){
-				//manual circle string
-				svg +='<circle class = "legend-circle" id = "' + circle + '" fill = "#ff7900" fill-opacity = "0.75" stroke = "#165056" cx = "50"/>';
+        	//Step 2: loop to add each circle and text to svg string
+        	for (var i=0; i<circles.length; i++){
+            //circle string
+            svg += '<circle class="legend-circle" id="' + circles[i] + 
+            '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="90"/>';
+            
+             //text string
+            svg += '<text id="' + circles[i] + '-text" x="65" y="60"></text>';
+        	};
 
-				//text string
-				svg += '<text id = "' + circle + '-text" x="95" y="' + circles[circle] + '"></text>';
-				console.log(circles[circle]);
-			};
-
-			//close svg string
-			svg += "</svg>";
-
-			//add attribute legend svg to container
-			$(container).append(svg);
+        	//close svg string
+        	svg += "</svg>";
 
 
-			return container;
-		}
-	});
+            //add attribute legend svg to container
+            $(container).append(svg);
 
-	map.addControl(new legendControl);
+            return container;
+        }
+    });
 
-	updateLegend(map, attributes[0]);
+    map.addControl(new LegendControl());
+
+    updateLegend(map, attributes[0]);
 };
 
-  
+//Update the legend with new attribute
+function updateLegend(map, attribute){
+    //create content for legend
+    var year = attribute.split("_")[1];
+    var content = "Homicides in " + year;
 
-function updateLegend(map, attribute) {
-	//information for legend
-	var year = attribute.split("_")[1];
-   	var content = "Homicides in " + year;
+    //replace legend content
+    $('#temporal-legend').html(content);
+    
+    //get the max, mean, and min values as an object
+    var circleValues = getCircleValues(map, attribute);
+    
+    for (var key in circleValues){
+        //get the radius
+    	var radius = calcPropRadius(circleValues[key]);
 
-	//update legend content
-	$('#temporal-legend').html(content);
-
-	//get the min, max, and mean values as an object
-	var circleValues = getCircleValues(map, attribute);
-
-	for (var key in circleValues) {
-		//get the radius
-		var radius = calcPropRadius(circleValues[key]);
-
-		//assign the cy and r attributes
-		$('#'+key).attr({
-			cy: 74.8-radius,
-			r: radius
-		});
-
-		//add legend text
-		$('#'+key+'-text').text(Math.round(circleValues[key]*100)/100 + " Inches");
-	};
+        //Step 3: assign the cy and r attributes
+        $('#'+key).attr({
+            cy: 179 - radius,
+            r: radius
+        });
+    };
 };
-   
-function getCircleValues(map, attribute){
-	//start with min at highest possible and max at lowest possible number
-	var min = Infinity,
-		max = -Infinity;
-
-	map.eachLayer(function(layer){
-		//get the attribute value
-		if (layer.feature){
-			var attributeValue = Number(layer.feature.properties[attribute]);
-
-			//test for min
-			if (attributeValue<min){
-				min = attributeValue;
-			};
-
-			//test for max
-			if (attributeValue>max){
-				max = attributeValue;
-			};
-		};
-	});
-
-	//set mean
-	var mean = (max + min)/2;
-
-	//return values as an objest
-	return {
-		max: max,
-		mean: mean,
-		min: min
-	};
-};
-
-
 
 
 
@@ -711,7 +670,7 @@ function getCircleValues(map, attribute){
      //end createMinMax
 // 
 //createNormalizedRaw(pointToLayer, )
-//console.log("im normal")
+console.log("im normal")
 
 //way at the bottom- we call the create map function once the doc has loaded.
 
