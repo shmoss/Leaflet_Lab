@@ -9,8 +9,6 @@ var attributes;
 var rawAttributes;
 var index;
 var response;
-//var attValue
-//not sure I'll need this..
 var normalized = true;
 console.log(normalized)
 var raw;
@@ -66,7 +64,7 @@ function calcRawPropRadius(rawAttValue) {
 
 //end radius function
 
-function createPopup(properties, attribute, layer, radius){
+function createPopup(properties, attribute, rawAttribute, layer, radius){
     //add city to popup content string
     var popupContent = "<p><b>City:</b> " + properties.City + "</p>";
 	
@@ -80,8 +78,10 @@ function createPopup(properties, attribute, layer, radius){
     });
 };
 
+
+
 //function to convert markers to circle markers
-function pointToLayer(feature, latlng, attributes){
+function pointToLayer(feature, latlng, attributes, rawAttributes){
 	//console.log("Hi")
     //Determine which attribute to visualize with proportional symbols
     attribute = attributes[0];
@@ -108,7 +108,7 @@ function pointToLayer(feature, latlng, attributes){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content string
-    createPopup(feature.properties, attribute, layer, options.radius);
+    createPopup(feature.properties, attribute, rawAttribute, layer, options.radius);
     
     layer.on({
         mouseover: function(){
@@ -186,7 +186,7 @@ function createPropSymbols(data, map, attributes){
     //create a Leaflet GeoJSON layer and add it to the map
     L.geoJson(data, {
         pointToLayer: function(feature, latlng){
-        	return pointToLayer(feature, latlng, attributes);
+        	return pointToLayer(feature, latlng, attributes, rawAttributes);
         }
     }).addTo(map);
 };
@@ -209,7 +209,6 @@ function updatePropSymbols(map, attribute, rawAttribute){
         if (layer.feature && layer.feature.properties[attribute]){
             //access feature properties
             var props = layer.feature.properties;
-			//console.log("THIS IS" + IndexCounter)
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
@@ -217,7 +216,7 @@ function updatePropSymbols(map, attribute, rawAttribute){
 				//console.log("COUNTTER");
 			}
             //add city to popup content string
-          createPopup(props, attribute, layer, radius, rawAttribute);
+          createPopup(props, attribute, rawAttribute, layer, radius);
           
         };
 	});
@@ -252,9 +251,35 @@ function updatePropSymbols(map, attribute, rawAttribute){
 // };
 
 function createSequenceControls(map, attributes, rawAttributes){
-    //create range input element (slider)
-    $('#panel').append('<input class="range-slider" type="range">');
-    console.log("working")
+	    var SequenceControl = L.Control.extend({
+        options: {
+            position: 'bottomleft'
+        },
+
+       onAdd: function(map){
+            // create the control container with a particular class name
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+
+            //create range input element (slider)
+            $(container).append('<input class="range-slider" type="range">');
+
+      
+	        //add skip buttons
+            $(container).append('<button class="skip" id="reverse" title="Reverse">Reverse</button>');
+            $(container).append('<button class="skip" id="forward" title="Forward">Skip</button>');
+	
+			//kill any mouse event listeners on the map
+            $(container).on('mousedown dblclick', function(e){
+                L.DomEvent.stopPropagation(e);
+            });
+
+			
+            return container;
+        }
+    });
+
+ map.addControl(new SequenceControl());
+
     $('.range-slider').attr({
         max: 6,
         min: 0,
@@ -263,11 +288,8 @@ function createSequenceControls(map, attributes, rawAttributes){
     });
     
     var dataArray = [attributes, rawAttributes];
-    
-    $('#panel').append('<button class="skip" id="reverse">Reverse</button>');
-    $('#panel').append('<button class="skip" id="forward">Skip</button>');
-    //$('#reverse').html('<img src="img/backward.png">');
-    //$('#forward').html('<img src="img/forward.png">');
+
+
     
     $('.skip').click(function(){
         var index = $('.range-slider').val();
@@ -291,10 +313,10 @@ function createSequenceControls(map, attributes, rawAttributes){
          //Step 9: pass new attribute to update symbols
          //console.log("Normalized is: ")
          if (normalized) {
-        	updatePropSymbols(map, attributes[index]);
+        	updatePropSymbols(map, attributes[index], rawAttributes[index]);
         	console.log("true")
         } else {
-        	updatePropSymbols(map, rawAttributes[index])
+        	updatePropSymbols(map, rawAttributes[index], attributes[index])
         	console.log("Changing to raw attributes")
         	console.log("flase")
         }
@@ -319,20 +341,7 @@ function createSequenceControls(map, attributes, rawAttributes){
         
     });
     
-       //wait for a change in the dropdown attribute menu
-	$('#selector').change(function() {
-		$('.range-slider').val(0); //set the slider value back to 0
 
-		//update the attribute index
-		IndexCounter++; 
-		IndexCounter = IndexCounter > 1 ? 0 : IndexCounter;
-		console.log(IndexCounter)
-		
-		
-		//update the proportional symbols at year 2008 with the correct attribute
-		updatePropSymbols(dataArray[IndexCounter][0], dataArray[0][0]);
-		return IndexCounter;
-	});
   
 };
 //console.log("this is the" + IndexCounter)
@@ -530,14 +539,19 @@ function getData(map){
 };
 
 function selectValues(response, map, attributes, rawAttributes) {
+	    $('#panel').append('<button class="Normalized" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
+    	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
+    	
 	 //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
-    $("#Normalized").click(function(){
+    $(".Normalized").click(function(){
+    	var index = $('.range-slider').val();
     	 normalized = true
     	 raw = false
     	 //console.log(normalized)
     	if (normalized == true) {
     		//removeAll()
-    	createPropSymbols(response, map, attributes);
+    	console.log(attributes[index])
+    	updatePropSymbols(map, attributes[index], rawAttributes[index]);
     	// function removeLayers(map, attribute){
     		// map.eachLayer(function(layer){
     			// map.removeLayer(layer)
@@ -547,14 +561,16 @@ function selectValues(response, map, attributes, rawAttributes) {
     // };
     };
     });
-    $("#Raw").click(function(){
+    $(".Raw").click(function(){
+    	var index = $('.range-slider').val();
     	normalized = false
     	raw = true
     	//console.log(normalized)
     	if (raw == true) {
-    	createPropSymbols(response, map, rawAttributes);
+    	map.removeLayer(attributes);
+    	updatePropSymbols(map, rawAttributes[index], attributes[index]);
    
-  		map.removeLayer(attributes);
+  		
     };
 });
  
@@ -577,7 +593,7 @@ function createLegend(map, attributes){
 			$(container).append('<div id = "temporal-legend">');
 
 			//start attribute legend svg string
-			var svg = '<svg id = "attribute-legend" width = "150px" height = "90px">';
+			var svg = '<svg id = "attribute-legend" width = "5000px" height = "500px">';
 
 			//create an array of circle names for loop
 			var circles = {
@@ -616,6 +632,7 @@ function createLegend(map, attributes){
 
 function updateLegend(map, attribute) {
 	//information for legend
+	console.log(attribute)
 	var year = attribute.split("_")[1];
    	var content = "Homicides in " + year;
 
@@ -636,12 +653,13 @@ function updateLegend(map, attribute) {
 		});
 
 		//add legend text
-		$('#'+key+'-text').text(Math.round(circleValues[key]*100)/100 + " Inches");
+		$('#'+key+'-text').text(Math.round(circleValues[key]*100)/100 + " Homicides");
 	};
 };
    
 function getCircleValues(map, attribute){
 	//start with min at highest possible and max at lowest possible number
+	console.log(attribute)
 	var min = Infinity,
 		max = -Infinity;
 
