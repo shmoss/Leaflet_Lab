@@ -4,14 +4,14 @@ body{
     background-color: black;
 }
 
-#map {height: 540px;
-	  width: 75%;
+#map {height: 600px;
+	  width: 90%;
 	  display: inline-block;
 	 }
 
 .legend-control-container {
     padding: 10px;
-    font: 16px/12px Optima, Optima, sans-serif;
+    font: 14px/14px Avenir, Avenir, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -26,6 +26,11 @@ body{
 	width: 100 px;
 	height: 100 px;*/
 	opacity: 60%;
+}
+
+#temporal-legend {
+	font-family: 'Avenir';
+	font-size: 18pt;
 }
 
 .leaflet-popup-content p {
@@ -62,14 +67,14 @@ body{
 	width: 100px;
 	height: 80px;
 	left: 50px;
-	font: 'Optima';
+	font: 'Avenir';
 	
 }
 
 .Normalized {
 	width: 100px;
 	height: 80px;
-	font: 'Optima';
+	font: 'Avenir';
 	
 }
 #forward {
@@ -94,7 +99,9 @@ body{
 	background-color: black;
 	padding: 1px;	
 	text-align: center;
-	font-family: 'Optima';
+	font-family: 'Avenir';
+	font-size: 18pt;
+	
 }
 
 #textpanel {
@@ -114,7 +121,7 @@ body{
     width: 390px;
     margin-right: 0px;
     margin-left: 0px;
-    font-family: 'Optima', sans-serif;
+    font-family: 'Avenir', sans-serif;
     color: white;
     font-size: 14pt;
     background-color: none;

@@ -9,8 +9,8 @@ var attributes;
 var rawAttributes;
 var index;
 var response;
+var popupContent;
 var normalized = true;
-console.log(normalized)
 var raw;
 var IndexCounter = 0; //tracks attribute being mapped
 
@@ -29,7 +29,8 @@ function createMap(){
     L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 	subdomains: 'abcd',
-	maxZoom: 8
+	maxZoom: 8,
+	minZoom: 6
 }).addTo(map);
 
 getData(map);
@@ -48,7 +49,7 @@ function calcPropRadius(attValue) {
     var radius = Math.sqrt(area/Math.PI);
 
     return radius;
-  };
+};
 
 //Create popups with attribute information, based on raw and normalized attributes
 function createPopup(properties, attribute, rawAttribute, layer, radius){
@@ -64,15 +65,12 @@ function createPopup(properties, attribute, rawAttribute, layer, radius){
     });
 };
 
-
-
 //convert geojson markers to circle markers
 function pointToLayer(feature, latlng, attributes, rawAttributes){
     //Determine which attribute to visualize with proportional symbols
     attribute = attributes[0];
     rawAttribute=rawAttributes[0];
     
-
     //create marker style
     var options = {
         fillColor: "#ff7900",
@@ -85,7 +83,6 @@ function pointToLayer(feature, latlng, attributes, rawAttributes){
     //For each feature, determine its value for the selected attribute
     var attValue = Number(feature.properties[attribute]);
     
-
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(attValue);
 
@@ -109,8 +106,8 @@ function pointToLayer(feature, latlng, attributes, rawAttributes){
 
     //return the circle marker to the L.geoJson pointToLayer option
     return layer;
+    return popupContent;
 };
-
 
 //Add circles for point features to the map
 function createPropSymbols(data, map, attributes){
@@ -137,8 +134,11 @@ function updatePropSymbols(map, attribute, rawAttribute){
 			if(IndexCounter > 0) {
 			}
             //call popup function to add new information as symbols are updated
+           if (normalized == true) {
           createPopup(props, attribute, rawAttribute, layer, radius);
-          
+          } else {
+          	createPopup(props, rawAttribute, attribute, layer, radius);
+          }        
         };
 	});
 	//also want our legend to update, so call the function
@@ -158,8 +158,7 @@ function createSequenceControls(map, attributes, rawAttributes){
 
             //create range input element
             $(container).append('<input class="range-slider" type="range">');
-
-      
+    
 	        //add skip buttons
             $(container).append('<button class="skip" id="reverse" title="Reverse">Reverse</button>');
             $(container).append('<button class="skip" id="forward" title="Forward">Skip</button>');
@@ -167,9 +166,7 @@ function createSequenceControls(map, attributes, rawAttributes){
 			//kill any mouse event listeners on the map
             $(container).on('mousedown dblclick', function(e){
                 L.DomEvent.stopPropagation(e);
-            });
-
-			
+            });			
             return container;
         }
     });
@@ -203,19 +200,15 @@ function createSequenceControls(map, attributes, rawAttributes){
         };
 
         //update slider
-        $('.range-slider').val(index);
-        
+        $('.range-slider').val(index);       
         //if normalized is true(see function further down), update prop symbols based on normalized attributes
          if (normalized) {
         	updatePropSymbols(map, attributes[index], rawAttributes[index]);
         	console.log("true")
         } else {
         	//update symbols based on raw attributes
-        	updatePropSymbols(map, rawAttributes[index], attributes[index])
-        	
-        }
-        	
-        
+        	updatePropSymbols(map, rawAttributes[index], attributes[index])        	
+        }       	        
     });
 
     //input listener for slider
@@ -224,19 +217,14 @@ function createSequenceControls(map, attributes, rawAttributes){
         var index = $(this).val();
         
          //pass new attribute to update symbols
-        if (normalized) {
-        	updatePropSymbols(map, attributes[index]);
-        	console.log("true")
+           if (normalized) {
+        		updatePropSymbols(map, attributes[index], rawAttributes[index]);
+        		console.log("true")
         } else {
-        	updatePropSymbols(map, rawAttributes[index])
-        	console.log("Changing to raw attributes")
-        	console.log("flase")
+        		//update symbols based on raw attributes
+        		updatePropSymbols(map, rawAttributes[index], attributes[index])       	
         }
-        
-    });
-    
-
-  
+	});         
 };
 
 //This function wil put the normalized data into an array
@@ -254,7 +242,6 @@ function processData(data){
             attributes.push(attribute);
         };
     };
-
     return attributes;
 };
 
@@ -273,8 +260,7 @@ function processRawData(data){
         };
     };
 
-    return rawAttributes;
-    
+    return rawAttributes;   
 };
 	
 //Import GeoJSON data
@@ -302,17 +288,15 @@ function getData(map){
             //createRawSymbols
             createSequenceControls(map, attributes, rawAttributes);
             return response
-        }
-		
+        }		
 	});
 };
 
 //function to determine whether or not to show raw or normalized attribute
-function selectValues(response, map, attributes, rawAttributes) {
-		
+function selectValues(response, map, attributes, rawAttributes) {	
 		//create "raw" and "normalized" buttons
-	    $('#panel').append('<button class="Normalized" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:optima; font-size:14px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
-    	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:optima; font-size:14px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
+	    $('#panel').append('<button class="Normalized" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:avenir; font-size:14px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
+    	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:avenir; font-size:14px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
     	
 	 //If normalized button hit, call function
     $(".Normalized").click(function(){
@@ -337,7 +321,6 @@ function selectValues(response, map, attributes, rawAttributes) {
     		updatePropSymbols(map, rawAttributes[index], attributes[index]);		
     	};
 	});
- 
 };
 
 //create the legend
@@ -346,7 +329,6 @@ function createLegend(map, attributes){
 		options: {
 			position: 'bottomright'
 		},
-
 		onAdd: function(map){
 			//create the container with a class name
 			var container = L.DomUtil.create('div', 'legend-control-container');
@@ -380,7 +362,6 @@ function createLegend(map, attributes){
 			//add attribute legend svg to container
 			$(container).append(svg);
 
-
 			return container;
 		}
 	});
@@ -389,7 +370,6 @@ function createLegend(map, attributes){
 	//call function to update the legend to first attribute
 	updateLegend(map, attributes[0]);
 };
-
   
 //update legend function
 function updateLegend(map, attribute) {
@@ -413,7 +393,6 @@ function updateLegend(map, attribute) {
 			cy: 260-radius,
 			r: radius
 		});
-
 		//add legend text
 		$('#'+key+'-text').text(Math.round(circleValues[key]*100)/100 + " Homicides");
 	};
