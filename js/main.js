@@ -253,7 +253,7 @@ function updatePropSymbols(map, attribute, rawAttribute){
 function createSequenceControls(map, attributes, rawAttributes){
 	    var SequenceControl = L.Control.extend({
         options: {
-            position: 'bottomleft'
+            position: 'bottomright'
         },
 
        onAdd: function(map){
@@ -584,7 +584,7 @@ function selectValues(response, map, attributes, rawAttributes) {
 function createLegend(map, attributes){
 	var legendControl = L.Control.extend({
 		options: {
-			position: 'bottomright'
+			position: 'bottomleft'
 		},
 
 		onAdd: function(map){
