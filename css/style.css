@@ -1,22 +1,25 @@
-#map {height: 600px;
-	  width: 90%;
+#map {height: 540px;
+	  width: 75%;
+	  display: inline-block;
 	 }
 
 .legend-control-container {
-    padding: 100px 100px;
+    padding: 10px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
-    width: 175px;
-	height: 190px;
+    width: 300px;
+	height: 300px;
 	text-align: center;
+	opacity: 70%;
 }
 
 #attribute-legend {
-	width: 150 px;
-	height: 150 px;
+	/*width: 100 px;
+	height: 100 px;*/
+	opacity: 70%;
 }
 
 
@@ -57,25 +60,30 @@
 .Raw{
 	width: 100px;
 	height: 80px;
+	left: 50px
+	
 }
 
 .Normalized{
 	width: 100px;
 	height: 80px;	
+	
 }
 #forward {
     float: right;
-    width: 60px;
-    height: 30px;
-    vertical-align:top;
+    width: 50px;
+    height: 40px;
+    vertical-align:center;
+    horizontal: center;
     
 }
 
 #reverse {
     float: left;
-    width: 60px;
-    height: 30px;
-	vertical-align: top;
+    width: 50px;
+    height: 40px;
+	vertical-align: center;
+	horizontal: center;
 }
 /*
 #Normalized {
@@ -89,6 +97,39 @@
 }
 */
 
+.header {
+	color: white;
+	background-color: black;
+	padding: 1px;	
+	text-align: center;
+	font-family: 'Roboto Slab', serif;
+}
 
+#textpanel {
+    width: 390px;
+    padding: 0px;
+    margin: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
+    vertical-align: left;
+     
+}
 
-
+.text {
+    margin-top: 0px;
+    margin-left: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 390px;
+    float: right;
+    display: inline-block;
+    margin-right: 0px;
+    margin-left: 0px;
+    font-family: 'Avenir', sans-serif;
+    color: black;
+    font-size: 12pt;
+    background-color: gray;
+    opacity: .8;
+    border-radius: 5px;
+}

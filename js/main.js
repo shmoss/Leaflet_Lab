@@ -20,7 +20,7 @@ function createMap(){
     	//set geographic center
         center: [40, -90],
         //set initial zoom level
-        zoom: 7,
+        zoom: 6,
     });
 
 
@@ -289,7 +289,8 @@ function createSequenceControls(map, attributes, rawAttributes){
     
     var dataArray = [attributes, rawAttributes];
 
-
+	$('#reverse').html('<img src = "img/backward.png">');
+	$('#forward').html('<img src = "img/forward.png">');
     
     $('.skip').click(function(){
         var index = $('.range-slider').val();
@@ -539,6 +540,7 @@ function getData(map){
 };
 
 function selectValues(response, map, attributes, rawAttributes) {
+	
 	    $('#panel').append('<button class="Normalized" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
     	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
     	
@@ -605,10 +607,10 @@ function createLegend(map, attributes){
 			//loop to add each circle and text to svg string
 			for (var circle in circles){
 				//manual circle string
-				svg +='<circle class = "legend-circle" id = "' + circle + '" fill = "#ff7900" fill-opacity = "0.75" stroke = "#165056" cx = "50"/>';
+				svg +='<circle class = "legend-circle" id = "' + circle + '" fill = "#ff7900" fill-opacity = "0.75" stroke = "#165056" cx = "140"/>';
 
 				//text string
-				svg += '<text id = "' + circle + '-text" x="95" y="' + circles[circle] + '"></text>';
+				svg += '<text id = "' + circle + '-text" x="185" y="2' + circles[circle] + '"></text>';
 				console.log(circles[circle]);
 			};
 
@@ -648,7 +650,7 @@ function updateLegend(map, attribute) {
 
 		//assign the cy and r attributes
 		$('#'+key).attr({
-			cy: 74.8-radius,
+			cy: 260-radius,
 			r: radius
 		});
 
