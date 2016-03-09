@@ -4,7 +4,7 @@ body{
     background-color: black;
 }
 
-#map {height: 600px;
+#map {height: 650px;
 	  width: 90%;
 	  display: inline-block;
 	 }
@@ -19,18 +19,20 @@ body{
     width: 300px;
 	height: 270px;
 	text-align: center;
-	opacity: 60%;
+	opacity: .46;
+	
 }
 
 #attribute-legend {
 	width: 100 px;
-	height: 100 px;*/
+	height: 100 px;
 	opacity: 60%;
 }
 
 #temporal-legend {
 	font-family: 'Avenir';
 	font-size: 18pt;
+	
 }
 
 .leaflet-popup-content p {
@@ -79,7 +81,7 @@ body{
 }
 #forward {
     float: right;
-    width: 50px;
+    width: 45px;
     height: 30px;
     vertical-align:center;
     horizontal: center;
@@ -88,7 +90,7 @@ body{
 
 #reverse {
     float: left;
-    width: 50px;
+    width: 45px;
     height: 30px;
 	vertical-align: center;
 	horizontal: center;
