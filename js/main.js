@@ -541,8 +541,8 @@ function getData(map){
 
 function selectValues(response, map, attributes, rawAttributes) {
 	
-	    $('#panel').append('<button class="Normalized" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
-    	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:arial; font-size:15px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
+	    $('#panel').append('<button class="Normalized" style=" -moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:optima; font-size:16px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show normalized data</button>');
+    	$('#panel').append('<button class="Raw" style="-moz-box-shadow: 0px 10px 14px -7px #383838; -webkit-box-shadow: 0px 10px 14px -7px #383838; box-shadow: 0px 10px 14px -7px #383838; background-color:#FFF; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; display:inline-block; cursor:pointer; color:#000000; font-family:optima; font-size:16px; font-weight:bold; padding:8px 14px; text-decoration:none;">Show raw data</button>');
     	
 	 //This is my fifth operator- though it doesn't work right yet.  I can't get the layer to toggle, it overlays the function over and over.
     $(".Normalized").click(function(){

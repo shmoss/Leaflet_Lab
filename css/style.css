@@ -4,12 +4,12 @@ body{
 
 #map {height: 540px;
 	  width: 75%;
-	  
+	  display: inline-block;
 	 }
 
 .legend-control-container {
     padding: 10px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
+    font: 16px/12px Optima, Optima, sans-serif;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -17,13 +17,13 @@ body{
     width: 300px;
 	height: 270px;
 	text-align: center;
-	opacity: 70%;
+	opacity: 60%;
 }
 
 #attribute-legend {
 	width: 100 px;
 	height: 100 px;*/
-	opacity: 70%;
+	opacity: 60%;
 }
 
 
@@ -65,13 +65,15 @@ body{
 .Raw{
 	width: 100px;
 	height: 80px;
-	left: 50px
+	left: 50px;
+	font: 'Optima';
 	
 }
 
 .Normalized{
 	width: 100px;
-	height: 80px;	
+	height: 80px;
+	font: 'Optima';
 	
 }
 #forward {
@@ -107,7 +109,7 @@ body{
 	background-color: black;
 	padding: 1px;	
 	text-align: center;
-	font-family: 'Roboto Slab', serif;
+	font-family: 'Optima';
 }
 
 #textpanel {
@@ -127,14 +129,13 @@ body{
     padding-left: 10px;
     padding-right: 10px;
     width: 390px;
-    float: right;
-    display: inline-block;
+   
     margin-right: 0px;
     margin-left: 0px;
-    font-family: 'Avenir', sans-serif;
-    color: black;
-    font-size: 12pt;
-    background-color: gray;
+    font-family: 'Optima', sans-serif;
+    color: white;
+    font-size: 14pt;
+    background-color: none;
     opacity: .8;
     border-radius: 5px;
 }
